@@ -18,7 +18,7 @@ notesRouter
     .route('/')
     .get((req, res, next) => {
         NotesService.getAllNotes(req.app.get('db'))
-            .then(note => {
+            .then(notes => {
                 res.json(notes.map(serializeNote))
             })
             .catch(next)
@@ -52,11 +52,11 @@ notesRouter
     .route('/:note_id')
     .all((req, res, next) => {
         NotesService.getById(
-            req.app.get('id'),
+            req.app.get('db'),
             req.params.note_id
         )
             .then(note => {
-                if(!article) {
+                if(!note) {
                     return res.status(404).json({
                         error: { message: `Note doesn't exist` }
                     })

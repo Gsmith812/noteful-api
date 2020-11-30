@@ -16,7 +16,7 @@ foldersRouter
     .get((req, res, next) => {
         FolderService.getAllFolders(req.app.get('db'))
             .then(folders => {
-                res.json(folder.map(serializeFolder))
+                res.json(folders.map(serializeFolder))
             })
             .catch(next)
     })
@@ -57,7 +57,7 @@ foldersRouter
                             error: { message: `Folder doesn't exist` }
                         })
                     }
-                    res.article = article
+                    res.folder = folder
                     next();
                 })
                 .catch(next)
@@ -65,3 +65,15 @@ foldersRouter
         .get((req, res, next) => {
             res.json(serializeFolder(res.folder))
         })
+        .delete((req, res, next) => {
+            FolderService.deleteFolder(
+                req.app.get('db'),
+                req.params.folder_id
+            )
+                .then(numRowsAffected => {
+                    res.status(204).end()
+                })
+                .catch(next)
+        })
+
+module.exports = foldersRouter;
